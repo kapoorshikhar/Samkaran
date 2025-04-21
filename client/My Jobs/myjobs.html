@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Connect - My Jobs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #146fb9;
+            --secondary-color: #695b5b;
+            --accent-color: #607D8B;
+            --text-color: #333333;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #757575;
+            --success-color: #4CAF50;
+            --warning-color: #FFC107;
+            --danger-color: #F44336;
+            --info-color: #00BCD4;
+            --hey-color: #e6ebf2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--hey-color);
+            color: var(--text-color);
+        }
+
+        /* Header Styles - Simplified version, would be replaced with your full header */
+        header {
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-placeholder {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        /* Sub Header - Simplified version, would be replaced with your full sub-header */
+        .sub-header {
+            background-color: var(--light-gray);
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .sub-header-placeholder {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            color: var(--accent-color);
+        }
+
+        /* Main Content Styles */
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn i {
+            margin-right: 0.5rem;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(33, 150, 243, 0.1);
+        }
+
+        /* Jobs Filter and Tabs */
+        .jobs-filter-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .filter-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .filter-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .filter-tab {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: var(--light-gray);
+            color: var(--text-color);
+        }
+
+        .filter-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .filter-tab:hover:not(.active) {
+            background-color: var(--medium-gray);
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-option label {
+            margin-left: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .search-filter {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .search-filter input {
+            padding: 0.5rem;
+            border: 1px solid var(--medium-gray);
+            border-radius: 4px;
+            outline: none;
+            margin-left: 0.5rem;
+        }
+
+        .search-filter input:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* Jobs Grid */
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .job-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .job-header {
+            padding: 1.2rem;
+            border-bottom: 1px solid var(--light-gray);
+            position: relative;
+        }
+
+        .job-status {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.2rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-completed {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--primary-color);
+        }
+
+        .status-paused {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+        }
+
+        .status-dispute {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--danger-color);
+        }
+
+        .job-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            padding-right: 80px;
+        }
+
+        .job-client {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+        }
+
+        .client-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7rem;
+            margin-right: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .job-content {
+            padding: 1.2rem;
+        }
+
+        .job-details {
+            margin-bottom: 1rem;
+        }
+
+        .job-detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-label {
+            color: var(--dark-gray);
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        .job-progress {
+            margin-bottom: 1rem;
+        }
+
+        .progress-title {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-value {
+            font-weight: 500;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background-color: var(--light-gray);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .job-btn {
+            flex: 1;
+            padding: 0.5rem;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #1976D2;
+        }
+
+        .btn-secondary {
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--medium-gray);
+        }
+
+        .btn-danger {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background-color: rgba(244, 67, 54, 0.2);
+        }
+
+        /* List view styles */
+        .jobs-list {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .list-header {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--medium-gray);
+            background-color: var(--light-gray);
+        }
+
+        .list-job {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+            padding: 1.2rem 1.5rem;
+            align-items: center;
+            border-bottom: 1px solid var(--light-gray);
+            transition: background-color 0.3s ease;
+        }
+
+        .list-job:hover {
+            background-color: var(--light-gray);
+        }
+
+        .list-job:last-child {
+            border-bottom: none;
+        }
+
+        .list-job-title {
+            font-weight: 500;
+        }
+
+        .list-client {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .list-status {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .list-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .list-btn {
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: var(--medium-gray);
+            margin-bottom: 1rem;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .empty-description {
+            font-size: 1rem;
+            color: var(--dark-gray);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* View toggle */
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .view-btn {
+            padding: 0.5rem;
+            border-radius: 4px;
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            background-color: white;
+            border: 1px solid var(--medium-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--
+            primary-color);
+        }
+
+        .page-btn:hover:not(.active) {
+            background-color: var(--light-gray);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .jobs-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .jobs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .list-header, .list-job {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+
+            .list-header div:nth-child(4), 
+            .list-header div:nth-child(5),
+            .list-job div:nth-child(4), 
+            .list-job div:nth-child(5) {
+                display: none;
+            }
+
+            .main-container {
+                padding: 0 1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .page-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .filter-tabs {
+                flex-wrap: wrap;
+            }
+
+            .filter-options {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-filter {
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (simplified placeholder) -->
+    <header align="left">
+        <div class="header-placeholder">Next Connect -- Collaboration Over Competition</div>
+    </header>
+
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">My Jobs</h1>
+            <div class="page-actions">
+                <a href="#" class="btn btn-outline">
+                    <i class="fas fa-filter"></i> Filter
+                </a>
+                <a href="#" class="btn btn-outline">
+                    <i class="fas fa-sort"></i> Sort
+                </a>
+            </div>
+        </div>
+
+        <!-- Jobs Filter -->
+        <div class="jobs-filter-container">
+            <div class="filter-header">
+                <h2 class="filter-title">Filter Jobs</h2>
+                <div class="filter-tabs">
+                    <div class="filter-tab active">All Jobs</div>
+                    <div class="filter-tab">Active</div>
+                    <div class="filter-tab">Completed</div>
+                    <div class="filter-tab">OnGoing</div>
+                    <div class="filter-tab">Disputes</div>
+                    <div class="filter-tab">Application Status</div>
+                </div>
+            </div>
+            <div class="filter-options">
+                <div class="filter-option">
+                    <input type="checkbox" id="fixed-price">
+                    <label for="fixed-price">Fixed Price</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="hourly">
+                    <label for="hourly">Hourly</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="milestones">
+                    <label for="milestones">With Milestones</label>
+                </div>
+                <div class="search-filter">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="   Search jobs...">
+                </div>
+            </div>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="view-toggle">
+            <div class="view-btn active">
+                <i class="fas fa-th-large"></i>
+            </div>
+            <div class="view-btn">
+                <i class="fas fa-list"></i>
+            </div>
+        </div>
+
+        <!-- Jobs Grid View -->
+        <div class="jobs-grid">
+            <!-- Job Card 1 -->
+            <div class="job-card">
+                <div class="job-header">
+                    <h3 class="job-title">Website Redesign for E-commerce Store</h3>
+                    <div class="job-status status-active">Active</div>
+                    <div class="job-client">
+                        <div class="client-avatar">SK</div>
+                        <span>Samarth Khatri</span>
+                    </div>
+                </div>
+                <div class="job-content">
+                    <div class="job-details">
+                        <div class="job-detail-item">
+                            <span class="detail-label">Contract Type</span>
+                            <span class="detail-value">Fixed Price</span>
+                        </div>
+                        <div class="job-detail-item">
+                            <span class="detail-label">Budget</span>
+                            <span class="detail-value">$1,500</span>
+                        </div>
+                        <div class="job-detail-item">
+                            <span class="detail-label">Due Date</span>
+                            <span class="detail-value">Apr 15, 2025</span>
+                        </div>
+                    </div>
+                    <div class="job-progress">
+                        <div class="progress-title">
+                            <span>Progress</span>
+                            <span class="progress-value">65%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: 65%;"></div>
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <div class="job-btn btn-primary">View Applicants</div>
+                        <div class="job-btn btn-secondary">Message</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Card 2 -->
+            <div class="job-card">
+                <div class="job-header">
+                    <h3 class="job-title">Logo Design for Tech Startup</h3>
+                    <div class="job-status status-completed">Completed</div>
+                    <div class="job-client">
+                        <div class="client-avatar">SK</div>
+                        <span>Samarth Khatri</span>
+                    </div>
+                </div>
+                <div class="job-content">
+                    <div class="job-details">
+                        <div class="job-detail-item">
+                            <span class="detail-label">Contract Type</span>
+                            <span class="detail-value">Fixed Price</span>
+                        </div>
+                        <div class="job-detail-item">
+                            <span class="detail-label">Budget</span>
+                            <span class="detail-value">$500</span>
+                        </div>
+                        <div class="job-detail-item">
+                            <span class="detail-label">Completed</span>
+                            <span class="detail-value">Mar 10, 2025</span>
+                        </div>
+                    </div>
+                    <div class="job-progress">
+                        <div class="progress-title">
+                            <span>Progress</span>
+                            <span class="progress-value">100%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <div class="job-btn btn-secondary">View Details</div>
+                        <div class="job-btn btn-secondary">Message</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Card 3 -->
+            <div class="job-card">
+                <div class="job-header">
+                    <h3 class="job-title">Mobile App Development</h3>
+                    <div class="job-status status-paused">Ongoing</div>
+                    <div class="job-client">
+                        <div class="client-avatar">SK</div>
+                        <span>Samarth Khatri</span>
+                    </div>
+                </div>
+                <div class="job-content">
+                    <div class="job-details">
+                        <div class="job-detail-item">
+                            <span class="detail-label">Contract Type</span>
+                            <span class="detail-value">Hourly</span>
+                        </div>
+                        <div class="job-detail-item">
+                            <span class="detail-label">Rate</span>
+                            <span class="detail-value">$45/hr</span>
+                        </div>
+                        <div class="job-detail-item">
+                            <span class="detail-label">Hours Logged</span>
+                            <span class="detail-value">32 hrs</span>
+                        </div>
+                    </div>
+                    <div class="job-progress">
+                        <div class="progress-title">
+                            <span>Progress</span>
+                            <span class="progress-value">40%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: 40%;"></div>
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <div class="job-btn btn-primary">View Applicants</div>
+                        <div class="job-btn btn-secondary">Message</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Card 4 -->
+            <div class="job-card">
+                <div class="job-header">
+                    <h3 class="job-title">Content Writing for Blog</h3>
+                    <div class="job-status status-dispute">Dispute</div>
+                    <div class="job-client">
+                        <div class="client-avatar">SK</div>
+                        <span>Samarth Khatri</span>
+                    </div>
+                </div>
+                <div class="job-content">
+                    <div class="job-details">
+                        <div class="job-detail-item">
+                            <span class="detail-label">Contract Type</span>
+                            <span class="detail-value">Fixed Price</span>
+                        </div>
+                        <div class="job-detail-item">
+                            <span class="detail-label">Budget</span>
+                            <span class="detail-value">$800</span>
+                        </div>
+                        <div class="job-detail-item">
+                            <span class="detail-label">Disputed</span>
+                            <span class="detail-value">Mar 05, 2025</span>
+                        </div>
+                    </div>
+                    <div class="job-progress">
+                        <div class="progress-title">
+                            <span>Progress</span>
+                            <span class="progress-value">90%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <div class="job-btn btn-danger">Resolve Dispute</div>
+                        <div class="job-btn btn-secondary">Message</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Job Cards would go here -->
+        </div>
+
+        <!-- Jobs List View (hidden by default) -->
+        <div class="jobs-list" style="display: none;">
+            <div class="list-header">
+                <div>Job Title</div>
+                <div>Client</div>
+                <div>Status</div>
+                <div>Price</div>
+                <div>Actions</div>
+            </div>
+            <!-- Job 1 -->
+            <div class="list-job">
+                <div class="list-job-title">Website Redesign for E-commerce Store</div>
+                <div class="list-client">
+                    <div class="client-avatar">JD</div>
+                    <span>Japtavya Singh</span>
+                </div>
+                <div>
+                    <span class="list-status status-active">Active</span>
+                </div>
+                <div>$1,500</div>
+                <div class="list-actions">
+                    <div class="list-btn btn-primary">Submit</div>
+                    <div class="list-btn btn-secondary">Message</div>
+                </div>
+            </div>
+            <!-- Job 2 -->
+            <div class="list-job">
+                <div class="list-job-title">Logo Design for Tech Startup</div>
+                <div class="list-client">
+                    <div class="client-avatar">VB</div>
+                    <span>Vishal Bharti</span>
+                </div>
+                <div>
+                    <span class="list-status status-completed">Completed</span>
+                </div>
+                <div>$500</div>
+                <div class="list-actions">
+                    <div class="list-btn btn-secondary">Details</div>
+                    <div class="list-btn btn-secondary">Message</div>
+                </div>
+            </div>
+            <!-- Job 3 -->
+            <div class="list-job">
+                <div class="list-job-title">Mobile App Development</div>
+                <div class="list-client">
+                    <div class="client-avatar">SK</div>
+                    <span>Samarth Khatri</span>
+                </div>
+                <div>
+                    <span class="list-status status-paused">Paused</span>
+                </div>
+                <div>$45/hr</div>
+                <div class="list-actions">
+                    <div class="list-btn btn-primary">Resume</div>
+                    <div class="list-btn btn-secondary">Message</div>
+                </div>
+            </div>
+            <!-- Job 4 -->
+            <div class="list-job">
+                <div class="list-job-title">Content Writing for Blog</div>
+                <div class="list-client">
+                    <div class="client-avatar">SK</div>
+                    <span>Shikhar Kapoor</span>
+                </div>
+                <div>
+                    <span class="list-status status-dispute">Dispute</span>
+                </div>
+                <div>$800</div>
+                <div class="list-actions">
+                    <div class="list-btn btn-danger">Resolve</div>
+                    <div class="list-btn btn-secondary">Message</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State (hidden by default) -->
+        <div class="empty-state" style="display: none;">
+            <div class="empty-icon">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <h2 class="empty-title">No Jobs Found</h2>
+            <p class="empty-description">
+                You don't have any jobs matching your current filters. Try adjusting your filters or search for new opportunities.
+            </p>
+            <a href="#" class="btn btn-primary">Create New Jobs</a>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <div class="page-btn">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="page-btn active">1</div>
+            <div class="page-btn">2</div>
+            <div class="page-btn">3</div>
+            <div class="page-btn">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        // View Toggle Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const gridView = document.querySelector('.jobs-grid');
+            const listView = document.querySelector('.jobs-list');
+            const viewButtons = document.querySelectorAll('.view-btn');
+            
+            viewButtons.forEach(function(button, index) {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    viewButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Toggle view
+                    if (index === 0) {
+                        gridView.style.display = 'grid';
+                        listView.style.display = 'none';
+                    } else {
+                        gridView.style.display = 'none';
+                        listView.style.display = 'block';
+                    }
+                });
+            });
+            
+            // Filter Tabs Functionality
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            const jobCards = document.querySelectorAll('.job-card');
+            const listJobs = document.querySelectorAll('.list-job');
+            const emptyState = document.querySelector('.empty-state');
+            
+            filterTabs.forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    filterTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    const filterValue = this.textContent.trim().toLowerCase();
+                    let matchFound = false;
+                    
+                    // Filter grid view items
+                    jobCards.forEach(function(card) {
+                        const status = card.querySelector('.job-status').textContent.trim().toLowerCase();
+                        
+                        if (filterValue === 'all jobs' || status === filterValue) {
+                            card.style.display = 'block';
+                            matchFound = true;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                    
+                    // Filter list view items
+                    listJobs.forEach(function(item) {
+                        const status = item.querySelector('.list-status').textContent.trim().toLowerCase();
+                        
+                        if (filterValue === 'all jobs' || status === filterValue) {
+                            item.style.display = 'grid';
+                            matchFound = true;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                    
+                    // Show/hide empty state
+                    if (!matchFound) {
+                        emptyState.style.display = 'block';
+                        gridView.style.display = 'none';
+                        listView.style.display = 'none';
+                    } else {
+                        emptyState.style.display = 'none';
+                        if (viewButtons[0].classList.contains('active')) {
+                            gridView.style.display = 'grid';
+                        } else {
+                            listView.style.display = 'block';
+                        }
+                    }
+                });
+            });
+            
+            // Search Functionality
+            const searchInput = document.querySelector('.search-filter input');
+            
+            searchInput.addEventListener('input', function() {
+                const searchValue = this.value.trim().toLowerCase();
+                let matchFound = false;
+                
+                // Search grid view items
+                jobCards.forEach(function(card) {
+                    const title = card.querySelector('.job-title').textContent.trim().toLowerCase();
+                    const client = card.querySelector('.job-client span').textContent.trim().toLowerCase();
+                    
+                    if (title.includes(searchValue) || client.includes(searchValue)) {
+                        card.style.display = 'block';
+                        matchFound = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // Search list view items
+                listJobs.forEach(function(item) {
+                    const title = item.querySelector('.list-job-title').textContent.trim().toLowerCase();
+                    const client = item.querySelector('.list-client span').textContent.trim().toLowerCase();
+                    
+                    if (title.includes(searchValue) || client.includes(searchValue)) {
+                        item.style.display = 'grid';
+                        matchFound = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Show/hide empty state
+                if (!matchFound && searchValue !== '') {
+                    emptyState.style.display = 'block';
+                    gridView.style.display = 'none';
+                    listView.style.display = 'none';
+                } else {
+                    emptyState.style.display = 'none';
+                    if (viewButtons[0].classList.contains('active')) {
+                        gridView.style.display = 'grid';
+                    } else {
+                        listView.style.display = 'block';
+                    }
+                }
+            });
+            
+            // Contract Type Filter Functionality
+            const contractFilters = document.querySelectorAll('.filter-option input');
+            
+            contractFilters.forEach(function(filter) {
+                filter.addEventListener('change', function() {
+                    applyFilters();
+                });
+            });
+            
+            function applyFilters() {
+                const fixedPriceChecked = document.getElementById('fixed-price').checked;
+                const hourlyChecked = document.getElementById('hourly').checked;
+                const milestonesChecked = document.getElementById('milestones').checked;
+                let matchFound = false;
+                
+                // If no filters are checked, show all items
+                if (!fixedPriceChecked && !hourlyChecked && !milestonesChecked) {
+                    jobCards.forEach(card => card.style.display = 'block');
+                    listJobs.forEach(item => item.style.display = 'grid');
+                    matchFound = true;
+                } else {
+                    // Apply filters to grid view
+                    jobCards.forEach(function(card) {
+                        const contractType = card.querySelector('.detail-value').textContent.trim().toLowerCase();
+                        let shouldShow = false;
+                        
+                        if ((fixedPriceChecked && contractType === 'fixed price') || 
+                            (hourlyChecked && contractType === 'hourly')) {
+                            shouldShow = true;
+                        }
+                        
+                        // Additional logic for milestones filter would go here
+                        
+                        if (shouldShow) {
+                            card.style.display = 'block';
+                            matchFound = true;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                    
+                    // Apply filters to list view
+                    listJobs.forEach(function(item) {
+                        // This assumes contract type information is available in list view
+                        // You might need to adjust this based on your actual data structure
+                        const title = item.querySelector('.list-job-title').textContent.trim().toLowerCase();
+                        let shouldShow = false;
+                        
+                        // Simple check based on job title containing keywords
+                        if ((fixedPriceChecked && title.includes('design')) || 
+                            (hourlyChecked && title.includes('development'))) {
+                            shouldShow = true;
+                        }
+                        
+                        if (shouldShow) {
+                            item.style.display = 'grid';
+                            matchFound = true;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                }
+                
+                // Show/hide empty state
+                if (!matchFound) {
+                    emptyState.style.display = 'block';
+                    gridView.style.display = 'none';
+                    listView.style.display = 'none';
+                } else {
+                    emptyState.style.display = 'none';
+                    if (viewButtons[0].classList.contains('active')) {
+                        gridView.style.display = 'grid';
+                    } else {
+                        listView.style.display = 'block';
+                    }
+                }
+            }
+            
+            // Pagination Functionality (basic implementation)
+            const pageButtons = document.querySelectorAll('.pagination .page-btn');
+            
+            pageButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    // Only process numbered buttons
+                    if (!this.textContent.includes('fa-chevron')) {
+                        // Remove active class from all buttons
+                        pageButtons.forEach(btn => btn.classList.remove('active'));
+                        
+                        // Add active class to clicked button
+                        this.classList.add('active');
+                        
+                        // In a real application, you would load different jobs here
+                        // This is just a placeholder for demonstration
+                        console.log('Page ' + this.textContent + ' clicked');
+                    }
+                });
+            });
+            
+            // Action Buttons Functionality
+            const actionButtons = document.querySelectorAll('.job-btn, .list-btn');
+            
+            actionButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const action = this.textContent.trim().toLowerCase();
+                    const jobTitle = this.closest('.job-card') ? 
+                                    this.closest('.job-card').querySelector('.job-title').textContent :
+                                    this.closest('.list-job').querySelector('.list-job-title').textContent;
+                    
+                    console.log('Action: ' + action + ' for job: ' + jobTitle);
+                    
+                    // In a real application, you would implement specific actions here
+                    if (action === 'submit work' || action === 'submit') {
+                        alert('Opening submission form for: ' + jobTitle);
+                    } else if (action === 'message') {
+                        alert('Opening message dialog for: ' + jobTitle);
+                    } else if (action === 'resolve dispute' || action === 'resolve') {
+                        alert('Opening dispute resolution for: ' + jobTitle);
+                    } else if (action === 'resume work' || action === 'resume') {
+                        alert('Resuming work on: ' + jobTitle);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

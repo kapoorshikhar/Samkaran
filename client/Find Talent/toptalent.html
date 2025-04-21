@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Direct Connect - Find Talent</title>
+  <style>
+    :root {
+      --primary: #146fb9;    /* Steel Blue */
+      --secondary: #FCFCFC;  /* Pearl White */
+      --accent: #607D8B;     /* Slate Gray */
+      --light-gray: #f5f5f5;
+      --dark-gray: #333333;
+      --success: #4CAF50;
+      --warning: #FFC107;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --primary-light: #e7eaee;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--primary-light);
+      color: var(--dark-gray);
+    }
+    
+    .navbar {
+      display: flex;
+      align-items: center;
+      padding: 0.8rem 2rem;
+      background-color: white;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin-right: 2rem;
+    }
+    
+    .nav-links {
+      display: flex;
+      list-style: none;
+      flex-grow: 1;
+    }
+    
+    .nav-links li {
+      margin-right: 1.5rem;
+    }
+    
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+      padding: 0.5rem 0;
+      transition: color 0.3s;
+      position: relative;
+    }
+    
+    .nav-links a.active {
+      color: var(--primary);
+    }
+    
+    .nav-links a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--primary);
+    }
+    
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+    
+    .search-container {
+      position: relative;
+      margin-left: auto;
+    }
+    
+    .search-input {
+      padding: 0.6rem 1rem;
+      border-radius: 20px;
+      border: 1px solid #ddd;
+      width: 250px;
+      font-size: 0.9rem;
+      padding-right: 40px;
+    }
+    
+    .search-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .hero {
+      background: linear-gradient(to right, #2196F3, #21CBF3);
+      border-radius: 8px;
+      padding: 2.5rem;
+      color: white;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .hero-content {
+      flex: 1;
+    }
+    
+    .hero h1 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .hero p {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+    
+    .search-large {
+      display: flex;
+      background: white;
+      border-radius: 30px;
+      padding: 0.5rem;
+      box-shadow: var(--shadow);
+      align-items: center;
+      max-width: 500px;
+    }
+    
+    .search-large input {
+      flex-grow: 1;
+      border: none;
+      padding: 0.8rem 1rem;
+      font-size: 1rem;
+      outline: none;
+    }
+    
+    .search-large button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 0.8rem 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .search-large button:hover {
+      background-color: #1976D2;
+    }
+    
+    .hero-image {
+      flex: 0 0 250px;
+      margin-left: 2rem;
+    }
+    
+    .hero-image img {
+      max-width: 100%;
+      height: auto;
+    }
+    
+    .category-nav {
+      display: flex;
+      background-color: white;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+    }
+    
+    .category-nav::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    .category-nav::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+    
+    .category-item {
+      white-space: nowrap;
+      padding: 0.8rem 1.2rem;
+      margin-right: 0.5rem;
+      border-radius: 25px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .category-item.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .category-item:hover:not(.active) {
+      background-color: var(--light-gray);
+    }
+    
+    .filters {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .filter-dropdown {
+      position: relative;
+      margin-right: 1rem;
+    }
+    
+    .filter-button {
+      display: flex;
+      align-items: center;
+      padding: 0.6rem 1rem;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    
+    .filter-button span {
+      margin-right: 0.5rem;
+    }
+    
+    .sort-by {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+    }
+    
+    .sort-by span {
+      margin-right: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--accent);
+    }
+    
+    .sort-by select {
+      padding: 0.6rem;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      font-size: 0.9rem;
+    }
+    
+    .freelancers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .freelancer-card {
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s;
+    }
+    
+    .freelancer-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .card-header {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .profile-pic {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 1rem;
+    }
+    
+    .freelancer-info h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.2rem;
+    }
+    
+    .freelancer-title {
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+    
+    .card-body {
+      padding: 1.5rem;
+    }
+    
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    
+    .skill-tag {
+      background-color: var(--light-gray);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+    
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .stat-value {
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-bottom: 0.2rem;
+    }
+    
+    .stat-label {
+      color: var(--accent);
+      font-size: 0.8rem;
+    }
+    
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #eee;
+      background-color: var(--light-gray);
+    }
+    
+    .mentor-badge {
+      display: flex;
+      align-items: center;
+      background-color: #FFF3CD;
+      color: #856404;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .contact-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+    
+    .contact-btn:hover {
+      background-color: #1976D2;
+    }
+    
+    .rating {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .stars {
+      color: #FFC107;
+      margin-right: 0.5rem;
+    }
+    
+    .rating-count {
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    
+    .pagination button {
+      padding: 0.5rem 1rem;
+      margin: 0 0.2rem;
+      border: 1px solid #ddd;
+      background-color: white;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+    
+    .pagination button.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .pagination button:hover:not(.active) {
+      background-color: var(--light-gray);
+    }
+    
+    .featured-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: var(--primary);
+      color: white;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    .rank-indicator {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: white;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">Direct Connect</div>
+    <ul class="nav-links">
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#" class="active">Find Talent</a></li>
+      <li><a href="#">My Jobs</a></li>
+      <li><a href="#">Talent Selection</a></li>
+      <li><a href="#">Transactions</a></li>
+      <li><a href="#">Community</a></li>
+    </ul>
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Search for talent...">
+      <span class="search-icon">🔍</span>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Find Top Freelance Talent</h1>
+        <p>Connect directly with skilled professionals without commission fees. Our platform helps you find the perfect match for your project.</p>
+        <div class="search-large">
+          <input type="text" placeholder="What skill are you looking for?">
+          <button>Search</button>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="/api/placeholder/250/180" alt="Freelancers collaboration">
+      </div>
+    </section>
+
+    <!-- Category Navigation -->
+    <div class="category-nav">
+      <div class="category-item active">Top Freelancers</div>
+      <div class="category-item">AI Freelancers</div>
+      <div class="category-item">Web Development</div>
+      <div class="category-item">Design & Creative</div>
+      <div class="category-item">Marketing</div>
+      <div class="category-item">Writing & Translation</div>
+      <div class="category-item">Video & Animation</div>
+      <div class="category-item">Music & Audio</div>
+      <div class="category-item">Programming & Tech</div>
+      <div class="category-item">Business</div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filters">
+      <div class="filter-dropdown">
+        <button class="filter-button">
+          <span>Ranking</span> ▼
+        </button>
+      </div>
+      <div class="filter-dropdown">
+        <button class="filter-button">
+          <span>Experience</span> ▼
+        </button>
+      </div>
+      <div class="filter-dropdown">
+        <button class="filter-button">
+          <span>Services</span> ▼
+        </button>
+      </div>
+      <div class="filter-dropdown">
+        <button class="filter-button">
+          <span>Community Status</span> ▼
+        </button>
+      </div>
+      <div class="sort-by">
+        <span>Sort by:</span>
+        <select>
+          <option>Best Match</option>
+          <option>Highest Rated</option>
+          <option>Most Projects</option>
+          <option>Recently Active</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Freelancers Grid -->
+    <div class="freelancers-grid">
+      <!-- Freelancer Card 1 -->
+      <div class="freelancer-card" style="position: relative;">
+        <div class="featured-badge">Featured</div>
+        <div class="card-header">
+          <img src="/api/placeholder/60/60" alt="Profile picture" class="profile-pic">
+          <div class="freelancer-info">
+            <h3>Alex Morgan <span class="rank-indicator">9</span></h3>
+            <div class="freelancer-title">Full Stack Developer</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="rating">
+            <div class="stars">★★★★★</div>
+            <div class="rating-count">(48 reviews)</div>
+          </div>
+          <div class="skills">
+            <span class="skill-tag">React</span>
+            <span class="skill-tag">Node.js</span>
+            <span class="skill-tag">MongoDB</span>
+            <span class="skill-tag">AWS</span>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-value">97%</div>
+              <div class="stat-label">Completion</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">42</div>
+              <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">4 hrs</div>
+              <div class="stat-label">Response</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="mentor-badge">✓ Mentor</div>
+          <button class="contact-btn">Connect</button>
+        </div>
+      </div>
+
+      <!-- Freelancer Card 2 -->
+      <div class="freelancer-card">
+        <div class="card-header">
+          <img src="/api/placeholder/60/60" alt="Profile picture" class="profile-pic">
+          <div class="freelancer-info">
+            <h3>Sophia Chen <span class="rank-indicator">8</span></h3>
+            <div class="freelancer-title">UI/UX Designer</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="rating">
+            <div class="stars">★★★★☆</div>
+            <div class="rating-count">(36 reviews)</div>
+          </div>
+          <div class="skills">
+            <span class="skill-tag">Figma</span>
+            <span class="skill-tag">Adobe XD</span>
+            <span class="skill-tag">UI Design</span>
+            <span class="skill-tag">Wireframing</span>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-value">95%</div>
+              <div class="stat-label">Completion</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">38</div>
+              <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">2 hrs</div>
+              <div class="stat-label">Response</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="mentor-badge">✓ Mentor</div>
+          <button class="contact-btn">Connect</button>
+        </div>
+      </div>
+
+      <!-- Freelancer Card 3 -->
+      <div class="freelancer-card">
+        <div class="card-header">
+          <img src="/api/placeholder/60/60" alt="Profile picture" class="profile-pic">
+          <div class="freelancer-info">
+            <h3>David Wilson <span class="rank-indicator">7</span></h3>
+            <div class="freelancer-title">SEO Specialist</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="rating">
+            <div class="stars">★★★★★</div>
+            <div class="rating-count">(29 reviews)</div>
+          </div>
+          <div class="skills">
+            <span class="skill-tag">SEO</span>
+            <span class="skill-tag">Content Marketing</span>
+            <span class="skill-tag">Analytics</span>
+            <span class="skill-tag">SEM</span>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-value">98%</div>
+              <div class="stat-label">Completion</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">31</div>
+              <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">1 hr</div>
+              <div class="stat-label">Response</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="mentor-badge">✓ Mentor</div>
+          <button class="contact-btn">Connect</button>
+        </div>
+      </div>
+
+      <!-- Freelancer Card 4 -->
+      <div class="freelancer-card">
+        <div class="card-header">
+          <img src="/api/placeholder/60/60" alt="Profile picture" class="profile-pic">
+          <div class="freelancer-info">
+            <h3>Emma Rodriguez <span class="rank-indicator">8</span></h3>
+            <div class="freelancer-title">Content Writer</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="rating">
+            <div class="stars">★★★★☆</div>
+            <div class="rating-count">(41 reviews)</div>
+          </div>
+          <div class="skills">
+            <span class="skill-tag">Blog Writing</span>
+            <span class="skill-tag">Copywriting</span>
+            <span class="skill-tag">Editing</span>
+            <span class="skill-tag">Proofreading</span>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-value">94%</div>
+              <div class="stat-label">Completion</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">47</div>
+              <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">3 hrs</div>
+              <div class="stat-label">Response</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="mentor-badge">✓ Mentor</div>
+          <button class="contact-btn">Connect</button>
+        </div>
+      </div>
+
+      <!-- Freelancer Card 5 -->
+      <div class="freelancer-card">
+        <div class="card-header">
+          <img src="/api/placeholder/60/60" alt="Profile picture" class="profile-pic">
+          <div class="freelancer-info">
+            <h3>James Lee <span class="rank-indicator">6</span></h3>
+            <div class="freelancer-title">Mobile App Developer</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="rating">
+            <div class="stars">★★★★☆</div>
+            <div class="rating-count">(22 reviews)</div>
+          </div>
+          <div class="skills">
+            <span class="skill-tag">Flutter</span>
+            <span class="skill-tag">React Native</span>
+            <span class="skill-tag">iOS</span>
+            <span class="skill-tag">Android</span>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-value">92%</div>
+              <div class="stat-label">Completion</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">19</div>
+              <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">5 hrs</div>
+              <div class="stat-label">Response</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="contact-btn">Connect</button>
+        </div>
+      </div>
+
+      <!-- Freelancer Card 6 -->
+      <div class="freelancer-card">
+        <div class="card-header">
+          <img src="/api/placeholder/60/60" alt="Profile picture" class="profile-pic">
+          <div class="freelancer-info">
+            <h3>Olivia Taylor <span class="rank-indicator">7</span></h3>
+            <div class="freelancer-title">Video Editor</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="rating">
+            <div class="stars">★★★★★</div>
+            <div class="rating-count">(33 reviews)</div>
+          </div>
+          <div class="skills">
+            <span class="skill-tag">Adobe Premiere</span>
+            <span class="skill-tag">After Effects</span>
+            <span class="skill-tag">Color Grading</span>
+            <span class="skill-tag">Motion Graphics</span>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-value">96%</div>
+              <div class="stat-label">Completion</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">27</div>
+              <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">6 hrs</div>
+              <div class="stat-label">Response</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="contact-btn">Connect</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button>«</button>
+      <button class="active">1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>4</button>
+      <button>5</button>
+      <button>»</button>
+    </div>
+  </main>
+</body>
+</html>

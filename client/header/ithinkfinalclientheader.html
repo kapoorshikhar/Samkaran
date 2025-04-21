@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Connect - Client Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #146fb9;
+            --secondary-color: #FCFCFC;
+            --accent-color: #607D8B;
+            --text-color: #333333;
+            --light-gray: #F5F5F5;
+            --border-color: #E0E0E0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .header-container {
+            width: 100%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            height: 70px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            min-width: 150px;
+        }
+
+        .logo img {
+            height: 32px;
+        }
+
+        .logo span {
+            margin-left: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style-type: none;
+            height: 100%;
+            margin: 0 20px;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .nav-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            height: 100%;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            box-shadow: inset 0 -3px 0 var(--primary-color);
+        }
+
+        .nav-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 220px;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .nav-item:hover .nav-dropdown {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-color);
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 250px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 8px 35px 8px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-color);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            font-size: 16px;
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .action-btn:hover {
+            background-color: var(--light-gray);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #ff4d4f;
+            color: white;
+            font-size: 10px;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .post-job-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+
+        .post-job-btn:hover {
+            background-color: #1976D2;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .user-profile:hover {
+            background-color: var(--light-gray);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            overflow: hidden;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .mobile-menu-toggle span {
+            width: 100%;
+            height: 2px;
+            background-color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 1200px) {
+            .nav-link {
+                padding: 0 10px;
+            }
+            
+            .user-name span {
+                display: none;
+            }
+            
+            .search-container {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .header-content {
+                padding: 0 20px;
+            }
+            
+            .nav-link {
+                font-size: 13px;
+                padding: 0 8px;
+            }
+            
+            .search-container {
+                width: 180px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .nav-menu {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                flex-direction: column;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                display: none;
+                max-height: calc(100vh - 70px);
+                overflow-y: auto;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .nav-item {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-link {
+                width: 100%;
+                padding: 15px 20px;
+            }
+            
+            .nav-dropdown {
+                position: relative;
+                width: 100%;
+                box-shadow: none;
+                border-top: 1px solid var(--border-color);
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            .search-container {
+                display: none;
+            }
+            
+            .right-section {
+                margin-left: auto;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .post-job-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-container">
+        <div class="header-content">
+            <div class="logo">
+                <span>Direct Connect</span>
+            </div>
+            
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Find Talent</a>
+                    <div class="nav-dropdown">
+                        <a href="#" class="dropdown-item">Top Freelancers</a>
+                        <a href="#" class="dropdown-item">AI Freelancers</a>
+                        <a href="#" class="dropdown-item">Search by Skills</a>
+                        <a href="#" class="dropdown-item">Verified Work</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">My Jobs</a>
+                    <div class="nav-dropdown">
+                        <a href="#" class="dropdown-item">Active Jobs</a>
+                        <a href="#" class="dropdown-item">Drafts</a>
+                        <a href="#" class="dropdown-item">Completed Jobs</a>
+                        <a href="#" class="dropdown-item">Job Archives</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Talent Selection</a>
+                    <div class="nav-dropdown">
+                        <a href="#" class="dropdown-item">Hire Selection Assistant</a>
+                        <a href="#" class="dropdown-item">Screening Tools</a>
+                        <a href="#" class="dropdown-item">Candidate Comparison</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Transactions</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Community</a>
+                </li>
+            </ul>
+            
+            <div class="right-section">
+                <div class="search-container">
+                    <input type="text" class="search-bar" placeholder="Search for talent...">
+                    <button class="search-icon">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <button class="post-job-btn">Post a Job</button>
+                
+                <button class="action-btn">
+                    <i class="far fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                
+                <button class="action-btn">
+                    <i class="far fa-envelope"></i>
+                    <span class="notification-badge">5</span>
+                </button>
+                
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <img class="avatar-img" src="/api/placeholder/32/32" alt="User Avatar">
+                    </div>
+                    <div class="user-name">
+                        <span>Samarth</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <script>
+        // Mobile menu toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.mobile-menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            menuToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

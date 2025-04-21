@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Management Dashboard</title>
+    <!-- --primary: #4361ee; -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+            
+
+
+        :root {
+            --primary: #146fb9;
+            --primary-dark: #3a56d4;
+            --primary-light: #eef2ff;
+            --secondary: #2ec4b6;
+            --secondary-dark: #29b0a3;
+            --danger: #e63946;
+            --warning: #f9c74f;
+            --success: #43aa8b;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --gray: #90a4ae;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            padding: 10px 16px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            display: inline-block;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        nav ul li a.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+            font-weight: 600;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            background-color: var(--light);
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            background-color: var(--primary-light);
+        }
+
+        .user-profile img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 2px solid white;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-container {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.15);
+        }
+
+        .button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.25);
+        }
+
+        .button.secondary {
+            background-color: var(--secondary);
+            box-shadow: 0 4px 12px rgba(46, 196, 182, 0.15);
+        }
+
+        .button.secondary:hover {
+            background-color: var(--secondary-dark);
+            box-shadow: 0 6px 16px rgba(46, 196, 182, 0.25);
+        }
+
+        .button.danger {
+            background-color: var(--danger);
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.15);
+        }
+
+        .button.danger:hover {
+            background-color: #d03040;
+            box-shadow: 0 6px 16px rgba(230, 57, 70, 0.25);
+        }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        .summary-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .summary-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            width: 100%;
+            background-color: var(--primary);
+        }
+
+        .summary-card:nth-child(2)::after {
+            background-color: var(--warning);
+        }
+
+        .summary-card:nth-child(3)::after {
+            background-color: var(--success);
+        }
+
+        .summary-card:nth-child(4)::after {
+            background-color: var(--danger);
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+        }
+
+        .summary-card h3 {
+            font-size: 15px;
+            color: var(--gray);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .summary-card p {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .summary-card .change {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            width: fit-content;
+            font-weight: 500;
+            margin-top: auto;
+        }
+
+        .summary-card .change.up {
+            color: var(--success);
+            background-color: rgba(67, 170, 139, 0.12);
+        }
+
+        .summary-card .change.down {
+            color: var(--danger);
+            background-color: rgba(230, 57, 70, 0.12);
+        }
+
+        /* Filter Section */
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            padding: 12px 18px;
+            width: 320px;
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .search-box i {
+            color: var(--gray);
+            margin-right: 10px;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        .filter-select {
+            padding: 12px 18px;
+            border: 1px solid #e1e5eb;
+            border-radius: var(--border-radius);
+            background-color: white;
+            font-size: 14px;
+            transition: var(--transition);
+            cursor: pointer;
+            color: var(--dark);
+            min-width: 180px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2390a4ae' viewBox='0 0 16 16'%3E%3Cpath d='M8 10.5a.5.5 0 0 1-.354-.146l-4-4a.5.5 0 1 1 .708-.708L8 9.293l3.646-3.647a.5.5 0 0 1 .708.708l-4 4A.5.5 0 0 1 8 10.5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+        }
+
+        .filter-select:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.05);
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        /* Transaction Table */
+        .transaction-table-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            color: var(--dark);
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+        }
+
+        th {
+            font-weight: 600;
+            font-size: 14px;
+            background-color: var(--light);
+            color: var(--gray);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            font-size: 14px;
+            border-top: 1px solid #edf2f7;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr {
+            transition: var(--transition);
+        }
+
+        tbody tr:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status.pending {
+            background-color: rgba(249, 199, 79, 0.15);
+            color: var(--warning);
+        }
+
+        .status.pending::before {
+            background-color: var(--warning);
+        }
+
+        .status.paid {
+            background-color: rgba(67, 170, 139, 0.15);
+            color: var(--success);
+        }
+
+        .status.paid::before {
+            background-color: var(--success);
+        }
+
+        .status.overdue {
+            background-color: rgba(230, 57, 70, 0.15);
+            color: var(--danger);
+        }
+
+        .status.overdue::before {
+            background-color: var(--danger);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background-color: var(--light);
+            color: var(--dark);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-icon:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 20px;
+        }
+
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #e1e5eb;
+            background-color: white;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+
+        .pagination button.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+        }
+
+        .pagination button:hover:not(.active) {
+            background-color: var(--primary-light);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            width: 550px;
+            max-width: 95%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: translateY(0);
+            transition: transform 0.3s;
+            animation: slideUp 0.3s;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid #edf2f7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 10;
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--gray);
+            transition: var(--transition);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+            background-color: rgba(230, 57, 70, 0.1);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e1e5eb;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            transition: var(--transition);
+            color: var(--dark);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #edf2f7;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            position: sticky;
+            bottom: 0;
+            background-color: white;
+            z-index: 10;
+            border-bottom-left-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 992px) {
+            .filter-options {
+                overflow-x: auto;
+                padding-bottom: 10px;
+                width: 100%;
+                justify-content: flex-start;
+            }
+            
+            .filter-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+            
+            .main-container {
+                padding: 20px;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: block;
+                font-size: 24px;
+                color: var(--dark);
+                cursor: pointer;
+            }
+            
+            .user-profile span {
+                display: none;
+            }
+            
+            .summary-cards {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .page-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .transaction-table-container {
+                overflow-x: auto;
+            }
+            
+            table {
+                min-width: 800px;
+            }
+            
+            .pagination {
+                justify-content: center;
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-nav {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: block;
+            }
+            
+            .mobile-nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 250px;
+                height: 100%;
+                background-color: white;
+                z-index: 1000;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+                padding: 20px;
+                overflow-y: auto;
+            }
+            
+            .mobile-nav.active {
+                transform: translateX(0);
+            }
+            
+            .mobile-nav-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 30px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid #edf2f7;
+            }
+            
+            .mobile-nav-close {
+                width: 36px;
+                height: 36px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 8px;
+                background-color: var(--light);
+                color: var(--dark);
+                cursor: pointer;
+                transition: var(--transition);
+            }
+            
+            .mobile-nav-close:hover {
+                background-color: rgba(230, 57, 70, 0.1);
+                color: var(--danger);
+            }
+            
+            .mobile-menu-items {
+                list-style: none;
+            }
+            
+            .mobile-menu-items li {
+                margin-bottom: 10px;
+            }
+            
+            .mobile-menu-items li a {
+                display: block;
+                padding: 12px 16px;
+                text-decoration: none;
+                color: var(--dark);
+                border-radius: var(--border-radius);
+                transition: var(--transition);
+                font-weight: 500;
+            }
+            
+            .mobile-menu-items li a:hover {
+                background-color: var(--primary-light);
+                color: var(--primary);
+            }
+            
+            .mobile-menu-items li a.active {
+                background-color: var(--primary);
+                color: white;
+            }
+            
+            .mobile-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.5);
+                z-index: 999;
+                display: none;
+                backdrop-filter: blur(3px);
+            }
+            
+            .mobile-overlay.active {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">Next Connect</div>
+            <nav>
+                <ul>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#" class="active">Transactions</a></li>
+                    <li><a href="#"></a></li>
+                    <li><a href="#"></a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="user-profile">
+                <img src="/api/placeholder/40/40" alt="User Profile">
+                <span>Samarth Khatri</span>
+            </div>
+        </header>
+
+        <!-- Mobile Navigation -->
+        <div class="mobile-nav">
+            <div class="mobile-nav-header">
+                <div class="logo">ManageX</div>
+                <div class="mobile-nav-close">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <ul class="mobile-menu-items">
+                <li><a href="#"></a></li>
+                <li><a href="#"></a></li>
+                <li><a href="#" class="active">Transactions</a></li>
+                <li><a href="#"></a></li>
+                <li><a href="#"></a></li>
+                <li><a href="#"></a></li>
+                <li><a href="#"></a></li>
+            </ul>
+        </div>
+        <div class="mobile-overlay"></div>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <div class="page-title">
+                <h1>Transaction Management</h1>
+                <button class="button" id="add-transaction-btn">
+                    <i class="fas fa-plus"></i> Add Transaction
+                </button>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3>Total Transactions</h3>
+                    <p>$124,500.00</p>
+                    <div class="change up">
+                        <i class="fas fa-arrow-up"></i> 12.5% from last month
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <h3>Pending Amount</h3>
+                    <p>$34,250.00</p>
+                    <div class="change down">
+                        <i class="fas fa-arrow-down"></i> 5.2% from last month
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <h3>Completed Payments</h3>
+                    <p>32</p>
+                    <div class="change up">
+                        <i class="fas fa-arrow-up"></i> 8.3% from last month
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <h3>Overdue Payments</h3>
+                    <p>7</p>
+                    <div class="change down">
+                        <i class="fas fa-arrow-down"></i> 3.1% from last month
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search transactions...">
+                </div>
+                <div class="filter-options">
+                    <select class="filter-select">
+                        <option>All Status</option>
+                        <option>Pending</option>
+                        <option>Paid</option>
+                        <option>Overdue</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Date: Last 30 days</option>
+                        <option>Date: This Month</option>
+                        <option>Date: Last Month</option>
+                        <option>Date: Custom Range</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Amount: All</option>
+                        <option>Amount: < $1,000</option>
+                        <option>Amount: $1,000 - $5,000</option>
+                        <option>Amount: > $5,000</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Transactions Table -->
+            <div class="transaction-table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Client Name</th>
+                            <th>Service</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#TRX-2023-001</td>
+                            <td>Karan Dalakoti</td>
+                            <td>Software Developer Hiring</td>
+                            <td>15 Mar 2025</td>
+                            <td>$8,500.00</td>
+                            <td><span class="status paid">Paid</span></td>
+                            <td class="action-buttons">
+                                <span class="btn-icon"><i class="fas fa-eye"></i></span>
+                                <span class="btn-icon"><i class="fas fa-edit"></i></span>
+                                <span class="btn-icon"><i class="fas fa-file-pdf"></i></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#TRX-2023-002</td>
+                            <td>Japtavya Singh</td>
+                            <td>Web Designer Placement</td>
+                            <td>12 Mar 2025</td>
+                            <td>$6,200.00</td>
+                            <td><span class="status paid">Paid</span></td>
+                            <td class="action-buttons">
+                                <span class="btn-icon"><i class="fas fa-eye"></i></span>
+                                <span class="btn-icon"><i class="fas fa-edit"></i></span>
+                                <span class="btn-icon"><i class="fas fa-file-pdf"></i></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#TRX-2023-003</td>
+                            <td>Shikhar Kapoor</td>
+                            <td>Project Manager Recruitment</td>
+                            <td>10 Mar 2025</td>
+                            <td>$12,800.00</td>
+                            <td><span class="status pending">Pending</span></td>
+                            <td class="action-buttons">
+                                <span class="btn-icon"><i class="fas fa-eye"></i></span>
+                                <span class="btn-icon"><i class="fas fa-edit"></i></span>
+                                <span class="btn-icon"><i class="fas fa-file-pdf"></i></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#TRX-2023-004</td>
+                            <td>Kapoor Shikhar</td>
+                            <td>UX Researcher Placement</td>
+                            <td>05 Mar 2025</td>
+                            <td>$7,900.00</td>
+                            <td><span class="
+                            <td><span class="status pending">Pending</span></td>
+                            <td class="action-buttons">
+                                <span class="btn-icon"><i class="fas fa-eye"></i></span>
+                                <span class="btn-icon"><i class="fas fa-edit"></i></span>
+                                <span class="btn-icon"><i class="fas fa-file-pdf"></i></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#TRX-2023-005</td>
+                            <td>Singh Japtavya</td>
+                            <td>DevOps Engineer Hiring</td>
+                            <td>28 Feb 2025</td>
+                            <td>$9,300.00</td>
+                            <td><span class="status overdue">Overdue</span></td>
+                            <td class="action-buttons">
+                                <span class="btn-icon"><i class="fas fa-eye"></i></span>
+                                <span class="btn-icon"><i class="fas fa-edit"></i></span>
+                                <span class="btn-icon"><i class="fas fa-file-pdf"></i></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <button><i class="fas fa-chevron-left"></i></button>
+                    <button class="active">1</button>
+                    <button>2</button>
+                    <button>3</button>
+                    <button>4</button>
+                    <button><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div class="modal" id="transaction-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Transaction</h2>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="client-name">Client Name</label>
+                    <input type="text" id="client-name" class="form-control" placeholder="Enter client name">
+                </div>
+                <div class="form-group">
+                    <label for="service-type">Service Type</label>
+                    <input type="text" id="service-type" class="form-control" placeholder="Enter service type">
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" class="form-control" placeholder="Enter amount">
+                </div>
+                <div class="form-group">
+                    <label for="transaction-date">Date</label>
+                    <input type="date" id="transaction-date" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" class="form-control">
+                        <option value="pending">Pending</option>
+                        <option value="paid">Paid</option>
+                        <option value="overdue">Overdue</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" class="form-control" placeholder="Enter additional notes"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="button secondary" id="cancel-btn">Cancel</button>
+                <button class="button" id="save-btn">Save Transaction</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        const addTransactionBtn = document.getElementById('add-transaction-btn');
+        const modal = document.getElementById('transaction-modal');
+        const modalClose = document.querySelector('.modal-close');
+        const cancelBtn = document.getElementById('cancel-btn');
+        
+        addTransactionBtn.addEventListener('click', () => {
+            modal.classList.add('show');
+        });
+        
+        modalClose.addEventListener('click', () => {
+            modal.classList.remove('show');
+        });
+        
+        cancelBtn.addEventListener('click', () => {
+            modal.classList.remove('show');
+        });
+        
+        // Mobile menu functionality
+        const mobileMenuBtn = document.querySelector('.mobile-menu');
+        const mobileNav = document.querySelector('.mobile-nav');
+        const mobileOverlay = document.querySelector('.mobile-overlay');
+        const mobileNavClose = document.querySelector('.mobile-nav-close');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileNav.classList.add('active');
+            mobileOverlay.classList.add('active');
+        });
+        
+        mobileNavClose.addEventListener('click', () => {
+            mobileNav.classList.remove('active');
+            mobileOverlay.classList.remove('active');
+        });
+        
+        mobileOverlay.addEventListener('click', () => {
+            mobileNav.classList.remove('active');
+            mobileOverlay.classList.remove('active');
+        });
+    </script>
+</body>
+</html>
